@@ -19,7 +19,7 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
             elif response == item[:num_letters]:
                 return item
 
-        print(f"Please choose an option from {valid_answers}")
+        print("Please choose yes or no")
 
 def instructions():
     make_statement("Instructions", "ℹ️")
