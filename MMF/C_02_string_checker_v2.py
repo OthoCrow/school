@@ -14,7 +14,7 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
             elif response == item[:num_letters]:
                 return item
 
-        print(f"Please choose yes or no")
+        print(f"Please choose from {valid_answers}")
 
 # main routine 
 payment_list = ('cash', 'credit')
