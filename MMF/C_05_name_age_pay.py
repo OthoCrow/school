@@ -25,7 +25,6 @@ def not_blank(question):
             print("Input is blank")
 
 
-
 def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
     # Checks that user enters full word or the first letter of a word from a selcetin of valid responses
     while True:
