@@ -68,14 +68,36 @@ while True:
     if age < 12:
         print(f"{name} is too young")
         continue
-    elif age > 120:
+
+    # Child price = $7.50
+    elif age <= 16:
+        ticket_price = CHILD_PRICE
+    
+    # Adult Price = $10.50
+    elif 16 <= age < 65:
+        ticket_price = ADULT_PRICE
+
+    # Senior Price = $6.50
+    elif 65 <= age <=120:
+        ticket_price = SENIOR_PRICE
+
+    # Too old
+    else:
         print(f"{name} is too old")
         continue
-    else:
-        pass
+    
 
     # Ask for payment method
     pay_method = string_checker("Payment method: ", payment_list, num_letters=2)
-    print(f"You chose {pay_method}")
 
-    print(f"{name} has bought a ticket ({pay_method})")
+    # Calculate surcharge
+    # Cash
+    if pay_method == "cash":
+        surcharge = 0
+    # Credit
+    else:
+        surcharge = ticket_price * surcharge
+
+
+print(f"{name}'s ticket cost ${ticket_price:.2f}, they paid by {pay_method} \nso the surcharge is ${surcharge:.2f} \n The total payable is ${total_to_pay:.2f}")
+
