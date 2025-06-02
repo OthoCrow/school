@@ -64,23 +64,20 @@ while True:
     # Ask for age
     age = int_check("Age: ")
 
+
     # Check age
     if age < 12:
         print(f"{name} is too young")
         continue
-
     # Child price = $7.50
     elif age <= 16:
         ticket_price = CHILD_PRICE
-    
     # Adult Price = $10.50
     elif 16 <= age < 65:
         ticket_price = ADULT_PRICE
-
     # Senior Price = $6.50
     elif 65 <= age <=120:
         ticket_price = SENIOR_PRICE
-
     # Too old
     else:
         print(f"{name} is too old")
