@@ -89,29 +89,29 @@ while tickets_sold < MAX_TICKETS:
     # Exit code
     if name == "xxx":
         break
+
+    # Ask for age
+    age = int_check("Age: ")
+
+    # Check age
+    if age < 12:
+        print(f"{name} is too young")
+        continue
+    elif age > 120:
+        print(f"{name} is too old")
+        continue
     else:
-            # Ask for age
-        age = int_check("Age: ")
+        pass
 
-        # Check age
-        if age < 12:
-            print(f"{name} is too young")
-            continue
-        elif age > 120:
-            print(f"{name} is too old")
-            continue
-        else:
-            pass
+    # Ask for payment method
+    payment_list = ('cash', 'credit')
 
-        # Ask for payment method
-        payment_list = ('cash', 'credit')
+    pay_method = string_checker("Payment method: ", payment_list, num_letters=2)
+    print(f"You chose {pay_method}")
 
-        pay_method = string_checker("Payment method: ", payment_list, num_letters=2)
-        print(f"You chose {pay_method}")
+    print(f"{name} has bought a ticket ({pay_method})")
 
-        print(f"{name} has bought a ticket ({pay_method})")
-
-        tickets_sold += 1
+    tickets_sold += 1
 
 
 
