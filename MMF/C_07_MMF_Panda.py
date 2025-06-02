@@ -15,5 +15,15 @@ mini_movie_dict = {
 # Create a table from dict
 mini_movie_frame = pandas.DataFrame(mini_movie_dict)
 
-print(mini_movie_frame)
+# Cacluate total payable for each tocket
+mini_movie_frame['Total'] = mini_movie_frame['Ticket Price'] + mini_movie_frame['Surcharge']
+mini_movie_frame['Profit'] = mini_movie_frame['Ticket Price'] - 5
 
+# Work out total paid and total profit
+total_paid = mini_movie_frame['Total'].sum()
+total_profit = mini_movie_frame['Profit'].sum()
+
+
+print(mini_movie_frame)
+print(f"Total Paind: ${total_paid:.2f}")
+print(f"Total Profit: ${total_profit:.2f}")
