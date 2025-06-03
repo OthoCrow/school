@@ -46,6 +46,7 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
 
 
 def currency(x):
+    # Formats as currency ($#.##)
     return "${:.2f}".format(x)
 
 # Main routine
@@ -67,6 +68,7 @@ all_names = []
 all_ticket_costs = []
 all_surcharges = []
 
+
 # Dict for ticket details
 mini_movie_dict = {
     'Name': all_names,
@@ -76,7 +78,7 @@ mini_movie_dict = {
 
 while True:
     # Ask for name
-    name = not_blank("Name: ")
+    name = not_blank("\nName: ")
 
     # Exit code
     if name == "xxx":
@@ -103,7 +105,8 @@ while True:
     else:
         print(f"{name} is too old")
         continue
-    
+
+
 
     # Ask for payment method
     pay_method = string_checker("Payment method: ", payment_list, num_letters=2)
@@ -122,7 +125,7 @@ while True:
     all_ticket_costs.append(ticket_price)
     all_surcharges.append(surcharge)
 
-print
+
 
 # Create a table from dict
 mini_movie_frame = pandas.DataFrame(mini_movie_dict)
