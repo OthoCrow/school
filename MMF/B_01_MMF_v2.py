@@ -152,9 +152,41 @@ while tickets_sold < MAX_TICKETS:
 
     print(f"{name} has bought a ticket ({pay_method})")
 
+    # Calculate surcharge
+    # Cash
+    if pay_method == "cash":
+        surcharge = 0
+    # Credit
+    else:
+        surcharge = ticket_price * surcharge
+
+
+    # Add names, cost and surcharge to list
+    all_names.append(name)
+    all_ticket_costs.append(ticket_price)
+    all_surcharges.append(surcharge)
+
     tickets_sold += 1
 
+# Create a table from dict
+mini_movie_frame = pandas.DataFrame(mini_movie_dict)
 
+# Cacluate total payable for each ticket
+mini_movie_frame['Total'] = mini_movie_frame['Ticket Price'] + mini_movie_frame['Surcharge']
+mini_movie_frame['Profit'] = mini_movie_frame['Ticket Price'] - 5
+
+# Work out total paid and total profit
+total_paid = mini_movie_frame['Total'].sum()
+total_profit = mini_movie_frame['Profit'].sum()
+
+add_dollars = ['Ticket Price', 'Surcharge', 'Total', 'Profit']
+for var_item in add_dollars:
+    mini_movie_frame[var_item] = mini_movie_frame[var_item].apply(currency)
+
+
+print(mini_movie_frame.to_string(index=False))
+print(f"Total Paid: ${total_paid:.2f}")
+print(f"Total Profit: ${total_profit:.2f}")
 
 if tickets_sold == MAX_TICKETS:
     print(f"\nYou have sold all of your tickets! {MAX_TICKETS}")
