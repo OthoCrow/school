@@ -201,7 +201,7 @@ print(f"Winner: {winner}, List Position: {winner_index}")
 total_won = mini_movie_frame.at[winner_index, 'Total']
 
 # Winner announcment
-print(f"The winner is {winner}. Their ticket worth ${total_won:.2f} is free!")
+print(f"The winner is {winner}. Their ticket worth ${total_won} is free!")
 
 if tickets_sold == MAX_TICKETS:
     print(f"\nYou have sold all of your tickets! {MAX_TICKETS}")
