@@ -1,4 +1,6 @@
 import pandas
+import random
+
 
 # Functions
 def make_statement(statement, decoration):
@@ -183,10 +185,23 @@ add_dollars = ['Ticket Price', 'Surcharge', 'Total', 'Profit']
 for var_item in add_dollars:
     mini_movie_frame[var_item] = mini_movie_frame[var_item].apply(currency)
 
-
+# Calculate revenue and profit
 print(mini_movie_frame.to_string(index=False))
 print(f"Total Paid: ${total_paid:.2f}")
 print(f"Total Profit: ${total_profit:.2f}")
+
+# Choose random winner
+winner = random.choice(all_names)
+
+# Find index of winner
+winner_index = all_names.index(winner)
+print(f"Winner: {winner}, List Position: {winner_index}")
+
+# Retrieve total won
+total_won = mini_movie_frame.at[winner_index, 'Total']
+
+# Winner announcment
+print(f"The winner is {winner}. Their ticket worth ${total_won:.2f} is free!")
 
 if tickets_sold == MAX_TICKETS:
     print(f"\nYou have sold all of your tickets! {MAX_TICKETS}")
