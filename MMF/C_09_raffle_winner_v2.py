@@ -24,18 +24,17 @@ total_paid = mini_movie_frame['Total'].sum()
 total_profit = mini_movie_frame['Profit'].sum()
 
 # Print the dataframe without the index
-# mini_movie_frame = mini_movie_frame.set_index('Name')
-# print(mini_movie_frame)
 print(mini_movie_frame.to_string(index=False))
 
+# Choose winner
 winner = random.choice(all_names)
 
+# Find index of winner
 winner_index = all_names.index(winner)
-print(f"Winnner: {winner}, List Position: {winner_index}")
+print(f"Winner: {winner}, List Position: {winner_index}")
 
-winner_ticket_price = all_ticket_costs[winner_index]
-winner_surcharge = all_surcharges[winner_index]
-
+# Retrieve total won
 total_won = mini_movie_frame.at[winner_index, 'Total']
 
+# Winner announcment
 print(f"The winner is {winner}. Their ticket worth ${total_won:.2f} is free!")
