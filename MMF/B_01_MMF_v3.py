@@ -98,9 +98,6 @@ CHILD_PRICE = 7.50
 ADULT_PRICE = 10.50
 SENIOR_PRICE = 6.50
 
-# Credit surcharge %
-surcharge = 0.05
-
 
 # lists to hold ticket details
 all_names = []
@@ -116,6 +113,10 @@ mini_movie_dict = {
 }
 
 while tickets_sold < MAX_TICKETS:
+    # Credit surcharge %
+    # Defined insoide loop so that the surcharge resets each time
+    SURCHARGE = 0.05
+
     # Ask for name
     name = not_blank("\nName: ")
 
@@ -157,16 +158,17 @@ while tickets_sold < MAX_TICKETS:
     # Calculate surcharge
     # Cash
     if pay_method == "cash":
-        surcharge = 0
+        SURCHARGE = 0
     # Credit
     else:
-        surcharge = ticket_price * surcharge
+        SURCHARGE = ticket_price * SURCHARGE
+        SURCHARGE = round(SURCHARGE, 2)
 
 
     # Add names, cost and surcharge to list
     all_names.append(name)
     all_ticket_costs.append(ticket_price)
-    all_surcharges.append(surcharge)
+    all_surcharges.append(SURCHARGE)
 
     tickets_sold += 1
 
@@ -199,15 +201,15 @@ for var_item in add_dollars:
 
 # Calculate revenue and profit
 print(mini_movie_frame.to_string(index=False))
-print(f"Total Paid: ${total_paid:.2f}")
-print(f"Total Profit: ${total_profit:.2f}")
+print(f"Total Paid: ${total_paid}")
+print(f"Total Profit: ${total_profit}")
 
 
 
 # Winner announcment
-print(f"The winner is {winner}. Their ticket worth ${ticket_won} is free!")
-print(f"Total paid is now {total_paid - ticket_won}")
-print(f"Total profit is now {total_profit - profit_won}")
+print(f"\nThe winner is {winner}. Their ticket worth ${ticket_won} is free!")
+print(f"\nTotal paid is now ${total_paid - ticket_won}")
+print(f"Total profit is now ${total_profit - profit_won}")
 
 
 
