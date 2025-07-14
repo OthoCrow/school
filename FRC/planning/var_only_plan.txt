@@ -1,0 +1,53 @@
+=== Fund Raising Calculator (Mugs, dd/mm/yyyy) ===
+
+
+
+Quantity being made: 300
+
+
+
+--- Variable Expenses ----
+
+
+
+Item 		$ / item   # Bought  $ Cost
+
+Printing	/usr/bin/bash.75         300    25.00
+
+Plain Mugs	.00         300    00.00
+
+Packaging	/usr/bin/bash.50         300    50.00
+
+
+
+Variable Expenses Subtotal: 75.00
+
+
+
+--- You have no fixed expenses ---
+
+Fixed Expenses Subtotal: /usr/bin/bash.00
+
+
+
+
+
+--- Selling Price Calculations ---
+
+
+
+Total Expenses: 75.00
+
+Profit Goal: 50.00
+
+
+
+Total Sales Needed: 425.00
+
+
+
+Minimum Selling Price: .75
+
+
+
+*** Suggested Selling Price: .00 ***
