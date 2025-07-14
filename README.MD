@@ -13,16 +13,19 @@ Here is a list of the projects included in this repository:
 
 1. **L2 Project_zero**
    - **Description:** A collection of python components to be recycled in future projects.
-   - **Technologies Used:** Python
+   - **Technologies Used:** Python, git
    - **Link:** [View Project](https://github.com/OthoCrow/school/tree/main/2025-L2-Project_Zero)
 
 2. **MMF**
    - **Description:** A program that manages ticket purchases for a Mini-Movie-Fundraiser.
-   - **Technologies Used:** Python
+   - **Technologies Used:** Python, pandas, git
    - **Link:** [View Project](https://github.com/OthoCrow/school/tree/main/MMF)
 
+3. **FRC**
+   - **Description:** A program that calculates finanances for fundraising events.
+   - **Technologies Used:** Python
+   - **Link:** [View Project](https://github.com/OthoCrow/school/tree/main/FRC)
 
-*(Add more projects as needed)*
 
 ## Technologies Used
 
