@@ -4,7 +4,7 @@ def decode(text):
     for c in text:
         if c in alphabet:
             index = alphabet.index(c)
-            new_index = index - shift
+            new_index = (index - shift) % len(alphabet)
             output += alphabet[new_index]
         else:
             output += "?"
@@ -13,7 +13,7 @@ def decode(text):
 # Variables
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 shift = 3
-text = "khoor"
+text = "cheud"
 
 # Main routine
 print(decode(text))
