@@ -1,5 +1,5 @@
 # Functions
-def encode(text):
+def encode(text, shift=3):
     output = ""
     for c in text:
         if c in alphabet:
@@ -12,8 +12,7 @@ def encode(text):
 
 # Variables
 alphabet = "abcdefghijklmnopqrstuvwxyz"
-shift = 3
-text = "zebra"
+string = "zebra"
 
 # Main routine
-print(encode(text))
+print(encode(string))

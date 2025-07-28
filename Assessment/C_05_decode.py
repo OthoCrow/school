@@ -1,5 +1,5 @@
 # Functions
-def decode(text):
+def decode(text, shift=3):
     output = ""
     for c in text:
         if c in alphabet:
@@ -13,7 +13,7 @@ def decode(text):
 # Variables
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 shift = 3
-text = "cheud"
+string = "cheud"
 
 # Main routine
-print(decode(text))
+print(decode(string))
