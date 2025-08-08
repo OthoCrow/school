@@ -30,36 +30,56 @@ def instructions():
         make_statement("Instructions", "ℹ️")
         print("Here are the instructions...")
 
+    # Checks that user enters an interger between two values
+
+def int_check(question, low, high): 
+    error = f"Please enter an integer between {low} and {high}."
+
+    while True:
+        try:
+            # Change input to a inteer and check that is within range
+            response = int(input(question))
+
+            if low <= response <= high:
+                return response
+            else:
+                print(error)
+
+        except ValueError:
+            print(error)
+
 def encode(text, shift=3):
-    shift = int(input("Please enter an integer between 1 and 25 for shift: "))
+    shift = int_check(input("Please enter an integer between 1 and 25 for shift: "), 1, 25)
     output = ""
     for c in text:
-        if c in alphabet:
-            index = alphabet.index(c)
-            new_index = (index + shift) % len(alphabet)
-            output += alphabet[new_index]
+        if c == " ":
+            output += " "
+        if c in ALPHABET:
+            index = ALPHABET.index(c)
+            new_index = (index + shift) % len(ALPHABET)
+            output += ALPHABET[new_index]
         else:
             output += "?"
     return output
 
 def decode(text, shift=0):
-        input = int(input("Please enter an integer between 1 and 25 for shift: "))
-        output = ""
-        for c in text:
-            if c == " ":
-                if c in alphabet:
-                    index = alphabet.index(c)
-                    new_index = (index - shift) % len(alphabet)
-                    output += alphabet[new_index]
-                else:
-                    output += "?"
-        return output
+    shift = int_check(input("Please enter an integer between 1 and 25 for shift: "), 1, 25)
+    output = ""
+    for c in text:
+        if c == " ":
+            output += " "            
+        if c in ALPHABET:
+            index = ALPHABET.index(c)
+            new_index = (index - shift) % len(ALPHABET)
+            output += ALPHABET[new_index]
+        else:
+            output += "?"
+    return output
 
-# Variables
-alphabet = "abcdefghijklmnopqrstuvwxyz"
+# Constants
+ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
 # Main routine
-
 instructions()
 
 encode_decode = string_checker("Do you want to encode or decode? ", valid_answers=("encode", "decode"))
