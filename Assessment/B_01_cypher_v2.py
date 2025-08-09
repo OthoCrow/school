@@ -1,8 +1,9 @@
 """This program uses encrypts and decrypts a string using a key.
 
-This prgram uses the caesar shift cipher to encrypt a string of
+This program uses the caesar shift cipher to encrypt a string of
 lowercase characters from the alphabet. It uses a single digit
-key between 1 and 26cto encrypt an decrypt the text.
+key between 1 and 26 to encrypt an decrypt the text. 
+It only supports lowercase letters and will convert capitals as such.
 """
 
 
@@ -37,7 +38,13 @@ def instructions():
     if want_instructions == "yes":
         # Print instructions
         make_statement("Instructions", "#")
-        print("Here are the instructions...")
+        print(
+            "1. Choose whether you want to encode or decode a message.\n"
+            "2. If encoding, enter the text you want to encrypt. If decoding, enter the text you want to decrypt.\n"
+            "3. Enter a shift value (an integer between 1 and 25). This value determines how many positions each letter will be shifted in the alphabet.\n"
+            "4. The program will display the encoded or decoded message based on your input.\n"
+            "5. You can repeat the process or exit the program after receiving your output."
+        )
 
 
 def int_check(question, low, high):
@@ -96,13 +103,13 @@ instructions()
 encode_decode = string_checker("Do you want to encode or decode? ", valid_answers=("encode", "decode"))
 
 if encode_decode == "encode":
-    string = input("Enter text to encode: ")
+    string = input("Enter text to encode: ").lower()
     shift = int_check("Please enter an integer between 1 and 25 for shift: ", 1, 25)
     # Encodes string and prints output
     print(encode(string, shift))
 
 elif encode_decode == "decode":
-    string = input("Enter text to decode: ")
+    string = input("Enter text to decode: ").lower()
     shift = int_check("Please enter an integer between 1 and 25 for shift: ", 1, 25)
     # Decodes string and prints output
     print(decode(string, shift))
