@@ -11,6 +11,7 @@ def string_checker(question):
                 return item
         print(f"Please choose an option from y/n")
 
-# main routine 
-cool = string_checker("Are you cool?")
-print(cool)
+# main routine
+while True:
+    cool = string_checker("Are you cool?")
+    print(cool)
