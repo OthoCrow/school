@@ -41,7 +41,7 @@ def instructions():
         print(
             "1. Choose whether you want to encode or decode a message.\n"
             "2. If encoding, enter the text you want to encrypt. If decoding, enter the text you want to decrypt.\n"
-            "3. Enter a shift value (an integer between 1 and 25). This value determines how many positions each letter will be shifted in the alphabet.\n"
+            "3. Enter a key (an integer between 1 and 25). This value determines how many positions each letter will be shifted in the alphabet.\n"
             "4. The program will display the encoded or decoded message based on your input.\n"
             "5. You can repeat the process or exit the program after receiving your output."
         )
@@ -79,7 +79,7 @@ def encode(text, shift=3):
     return output
 
 
-def decode(text, shift=0):
+def decode(text, shift=3):
     """Decrypt a users input using a single digit key between 1 and 26."""
     output = ""
     for c in text:
@@ -100,16 +100,26 @@ ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 # Main routine
 instructions()
 
-encode_decode = string_checker("Do you want to encode or decode? ", valid_answers=("encode", "decode"))
+while True:
+    encode_history = []
+    decode_history =[]
 
-if encode_decode == "encode":
-    string = input("Enter text to encode: ").lower()
-    shift = int_check("Please enter an integer between 1 and 25 for shift: ", 1, 25)
-    # Encodes string and prints output
-    print(encode(string, shift))
+    encode_decode = string_checker("Do you want to encode or decode? ", valid_answers=("encode", "decode", "xxx"))
 
-elif encode_decode == "decode":
-    string = input("Enter text to decode: ").lower()
-    shift = int_check("Please enter an integer between 1 and 25 for shift: ", 1, 25)
-    # Decodes string and prints output
-    print(decode(string, shift))
+    # Exit loop
+    if encode_decode == "xxx":
+        break
+    # Choose encode
+    elif encode_decode == "encode":
+        string = input("Enter text to encode: ").lower()
+        shift = int_check("Please enter an integer between 1 and 25 for shift: ", 1, 25)
+        # Encodes string and prints output
+        encode_history.append(encode(string, shift))
+        print(encode_history[-1])
+    # Choose decode
+    elif encode_decode == "decode":
+        string = input("Enter text to decode: ").lower()
+        shift = int_check("Please enter an integer between 1 and 25 for shift: ", 1, 25)
+        # Decodes string and prints output
+        decode_history.append(decode(string, shift))
+        print(decode_history[-1])
