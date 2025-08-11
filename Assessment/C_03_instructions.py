@@ -5,17 +5,22 @@ def make_statement(statement, decoration):
     print(f"{decoration * 3} {statement} {decoration * 3}\n")
 
 
-def yes_no_checker(question):
+def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
     # Checks that user enters full word or the first letter of a word from a selcetin of valid responses
     while True:
         response = input(question).lower()
 
-        for item in ["yes", "no"]:
+        for item in valid_answers:
+
+            # Check if the response is the intire word
             if response == item:
                 return item
-            elif response == item[0]:
+
+            # Check if it is the 'n' letters
+            elif response == item[:num_letters]:
                 return item
-        print(f"Please choose an option from y/n")
+
+        print(f"Please choose from {valid_answers}")
 
 def instructions():
     # Print instructions
