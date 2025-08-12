@@ -96,14 +96,15 @@ def decode(text, shift=3):
 
 # Constants
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+encoded_history = []
+decoded_history =[]
+to_encode_history = []
+to_decode_history = []
 
 # Main routine
 instructions()
 
 while True:
-    encode_history = []
-    decode_history =[]
-
     encode_decode = string_checker("Do you want to encode or decode? ", valid_answers=("encode", "decode", "xxx"))
 
     # Exit loop
@@ -112,14 +113,20 @@ while True:
     # Choose encode
     elif encode_decode == "encode":
         string = input("Enter text to encode: ").lower()
+        to_encode_history.append(string)
         shift = int_check("Please enter an integer between 1 and 25 for shift: ", 1, 25)
         # Encodes string and prints output
-        encode_history.append(encode(string, shift))
-        print(encode_history[-1])
+        encoded_history.append(encode(string, shift))
+        print(encoded_history[-1])
     # Choose decode
     elif encode_decode == "decode":
         string = input("Enter text to decode: ").lower()
+        to_decode_history.append(string)
         shift = int_check("Please enter an integer between 1 and 25 for shift: ", 1, 25)
         # Decodes string and prints output
-        decode_history.append(decode(string, shift))
-        print(decode_history[-1])
+        decoded_history.append(decode(string, shift))
+        print(decoded_history[-1])
+
+
+print(f"Encode: {to_encode_history} => {encoded_history}")
+print(f"Decode: {to_encode_history} => {decoded_history}")
