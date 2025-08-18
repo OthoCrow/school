@@ -20,7 +20,7 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
 
         for item in valid_answers:
 
-            # Check if the response is the intire word
+            # Check if the response is the entire word
             if response == item:
                 return item
 
