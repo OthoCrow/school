@@ -1,4 +1,4 @@
-import itertoools
+import itertools
 
 # Functions go here
 def make_statement(statement, decoration):
@@ -36,7 +36,7 @@ def instructions():
             "2. If encoding, enter the text you want to encrypt. If decoding, enter the text you want to decrypt.\n"
             "3. Enter a key (an integer between 1 and 25). This value determines how many positions each letter will be shifted in the alphabet.\n"
             "4. The program will display the encoded or decoded message based on your input.\n"
-            "5. You can repeat the process or exit the program after receiving your output and view history.")
+            "5. You can repeat the process or exit the program (enter xxx) after receiving your output and view history.")
 
 
 def int_check(question, low, high):
