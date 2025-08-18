@@ -1,8 +1,8 @@
-"""This program uses encrypts and decrypts a string using a key.
+"""This program encrypts and decrypts a string using a key.
 
 This program uses the caesar shift cipher to encrypt a string of
 lowercase characters from the alphabet. It uses a single digit
-key between 1 and 26 to encrypt an decrypt the text. 
+key between 1 and 26 to encrypt and decrypt the text. 
 It only supports lowercase letters and will convert capitals as such.
 """
 
@@ -43,7 +43,7 @@ def instructions():
             "2. If encoding, enter the text you want to encrypt. If decoding, enter the text you want to decrypt.\n"
             "3. Enter a key (an integer between 1 and 25). This value determines how many positions each letter will be shifted in the alphabet.\n"
             "4. The program will display the encoded or decoded message based on your input.\n"
-            "5. You can repeat the process or exit the program after receiving your output."
+            "5. You can repeat the process or exit the program after receiving your output and view history."
         )
 
 
@@ -129,4 +129,4 @@ while True:
 
 
 print(f"Encode: {to_encode_history} => {encoded_history}")
-print(f"Decode: {to_encode_history} => {decoded_history}")
+print(f"Decode: {to_decode_history} => {decoded_history}")
