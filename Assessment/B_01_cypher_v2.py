@@ -1,11 +1,4 @@
-"""This program encrypts and decrypts a string using a key.
-
-This program uses the caesar shift cipher to encrypt a string of
-lowercase characters from the alphabet. It uses a single digit
-key between 1 and 26 to encrypt and decrypt the text. 
-It only supports lowercase letters and will convert capitals as such.
-"""
-
+import itertoools
 
 # Functions go here
 def make_statement(statement, decoration):
@@ -43,8 +36,7 @@ def instructions():
             "2. If encoding, enter the text you want to encrypt. If decoding, enter the text you want to decrypt.\n"
             "3. Enter a key (an integer between 1 and 25). This value determines how many positions each letter will be shifted in the alphabet.\n"
             "4. The program will display the encoded or decoded message based on your input.\n"
-            "5. You can repeat the process or exit the program after receiving your output and view history."
-        )
+            "5. You can repeat the process or exit the program after receiving your output and view history.")
 
 
 def int_check(question, low, high):
@@ -128,5 +120,14 @@ while True:
         print(decoded_history[-1])
 
 
-print(f"Encode: {to_encode_history} => {encoded_history}")
-print(f"Decode: {to_decode_history} => {decoded_history}")
+# Formatting and printing of history
+history_string = ""
+
+for encode, encoded, decode, decoded in itertools.zip_longest(to_encode_history, encoded_history, to_decode_history, decoded_history):
+    history_string += (
+        f"Encode: {encode}  >>  {encoded}\n"
+        f"Decode: {decode}  >>  {decoded}\n"
+        "---------------------------\n"
+    )
+
+print(history_string)
