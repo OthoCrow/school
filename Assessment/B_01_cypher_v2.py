@@ -2,12 +2,12 @@ import itertools
 
 # Functions go here
 def make_statement(statement, decoration):
-    """Emphasise headings by adding decoration to the start and end."""
+    # Emphasise headings by adding decoration to the start and end.
     print(f"{decoration * 3} {statement} {decoration * 3}\n")
 
 
 def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
-    """Check that user is a word from a list of valid responses."""
+    # Check that user is a word from a list of valid responses.
     while True:
         response = input(question).lower()
 
@@ -25,7 +25,7 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
 
 
 def instructions():
-    """Check if the user wants to see the instructions and print them."""
+    # Check if the user wants to see the instructions and print them.
     want_instructions = string_checker("Do you want to see the instructions? ")
 
     if want_instructions == "yes":
@@ -36,11 +36,12 @@ def instructions():
             "2. If encoding, enter the text you want to encrypt. If decoding, enter the text you want to decrypt.\n"
             "3. Enter a key (an integer between 1 and 25). This value determines how many positions each letter will be shifted in the alphabet.\n"
             "4. The program will display the encoded or decoded message based on your input.\n"
-            "5. You can repeat the process or exit the program (enter xxx) after receiving your output and view history.")
+            "5. You can repeat the process or exit the program (enter xxx) after receiving your output and view history."
+        )
 
 
 def int_check(question, low, high):
-    """Check that user enters an interger between two values."""
+    # Check that user enters an interger between two values.
     error = f"Please enter an integer between {low} and {high}."
     while True:
         try:
@@ -57,7 +58,7 @@ def int_check(question, low, high):
 
 
 def encode(text, shift=3):
-    """Encrypt a users input using a single digit key between 1 and 26."""
+    # Encrypt a users input using a single digit key between 1 and 26.
     output = ""
     for c in text:
         if c == " ":
@@ -72,7 +73,7 @@ def encode(text, shift=3):
 
 
 def decode(text, shift=3):
-    """Decrypt a users input using a single digit key between 1 and 26."""
+    # Decrypt a users input using a single digit key between 1 and 26.
     output = ""
     for c in text:
         if c == " ":
@@ -88,8 +89,9 @@ def decode(text, shift=3):
 
 # Constants
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+# Store history
 encoded_history = []
-decoded_history =[]
+decoded_history = []
 to_encode_history = []
 to_decode_history = []
 
