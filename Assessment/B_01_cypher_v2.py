@@ -68,7 +68,7 @@ def encode(text, shift=3):
             new_index = (index + shift) % len(ALPHABET)
             output += ALPHABET[new_index]
         else:
-            output += "?"
+            output += "�"
     return output
 
 
@@ -83,7 +83,7 @@ def decode(text, shift=3):
             new_index = (index - shift) % len(ALPHABET)
             output += ALPHABET[new_index]
         else:
-            output += "?"
+            output += "�"
     return output
 
 
