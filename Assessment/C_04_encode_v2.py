@@ -5,7 +5,7 @@ def encode(text, shift=3):
     for c in text:
         if c == " ":
             output += " "
-        if c in ALPHABET:
+        elif c in ALPHABET:
             index = ALPHABET.index(c)
             new_index = (index + shift) % len(ALPHABET)
             output += ALPHABET[new_index]
