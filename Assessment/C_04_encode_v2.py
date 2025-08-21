@@ -15,9 +15,8 @@ def encode(text, shift=3):
 
 # Variables
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
-string = input("Input text to encode: ")
 
 # Main routine
 while True:
+    string = input("Input text to encode: ").lower()
     print(encode(string))
-    
