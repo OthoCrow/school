@@ -19,8 +19,7 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
 # main routine 
 payment_list = ('cash', 'credit')
 
-want_instructions = string_checker("Do you want to see the instructions? ")
-print(f"You chose {want_instructions}")
-
-pay_method = string_checker("Payment method: ", payment_list, num_letters=2)
-print(f"You chose {pay_method}")
+while True:
+    pay_method = string_checker("Payment method: ", payment_list, num_letters=2)
+    print(f"You chose {pay_method}")
+    
