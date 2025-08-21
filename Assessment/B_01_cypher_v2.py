@@ -42,7 +42,7 @@ def instructions():
 
 def int_check(question, low, high):
     # Check that user enters an interger between two values.
-    error = f"Please enter an integer between {low} and {high}."
+    error = f"Invalid input."
     while True:
         try:
             # Change input to a integer and check that is within range
@@ -63,7 +63,7 @@ def encode(text, shift=3):
     for c in text:
         if c == " ":
             output += " "
-        if c in ALPHABET:
+        elif c in ALPHABET:
             index = ALPHABET.index(c)
             new_index = (index + shift) % len(ALPHABET)
             output += ALPHABET[new_index]
@@ -94,12 +94,13 @@ encoded_history = []
 decoded_history = []
 to_encode_history = []
 to_decode_history = []
+encode_key = []
 
 # Main routine
 instructions()
 
 while True:
-    encode_decode = string_checker("Do you want to encode or decode? ", valid_answers=("encode", "decode", "xxx"))
+    encode_decode = string_checker("\nDo you want to encode or decode? ", valid_answers=("encode", "decode", "xxx"))
 
     # Exit loop
     if encode_decode == "xxx":
@@ -127,9 +128,9 @@ history_string = ""
 
 for encode, encoded, decode, decoded in itertools.zip_longest(to_encode_history, encoded_history, to_decode_history, decoded_history):
     history_string += (
+        "---------------------------\n"
         f"Encode: {encode}  >>  {encoded}\n"
         f"Decode: {decode}  >>  {decoded}\n"
-        "---------------------------\n"
     )
 
 print(history_string)
