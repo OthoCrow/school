@@ -117,7 +117,7 @@ while True:
     elif encode_decode == "encode":
         string = input("Enter text to encode: ").lower()
         to_encode_history.append(string)
-        shift = int_check("Please enter an integer between 1 and 25 for shift: ", 1, 25)
+        shift = int_check("Please enter an integer between 1 and 26 for shift: ", 1, 26)
         # Encodes string and prints output
         encoded_history.append(encode(string, shift))
         print(encoded_history[-1])
