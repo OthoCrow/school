@@ -1,9 +1,9 @@
 import itertools
 
 # Functions go here
-def make_statement(statement, decoration):
+def make_statement(statement, decoration, amount):
     # Emphasise headings by adding decoration to the start and end.
-    print(f"{decoration * 3} {statement} {decoration * 3}\n")
+    print(f"{decoration * amount} {statement} {decoration * amount}\n")
 
 
 def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
@@ -26,11 +26,11 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
 
 def instructions():
     # Check if the user wants to see the instructions and print them.
-    want_instructions = string_checker("Do you want to see the instructions? ")
+    want_instructions = string_checker("Do you want to see the instructions(y/n): ")
 
     if want_instructions == "yes":
         # Print instructions
-        make_statement("Instructions", "#")
+        make_statement("Instructions", "#", 3)
         print(
             "1. Choose whether you want to encode or decode a message.\n"
             "2. If encoding, enter the text you want to encrypt. If decoding, enter the text you want to decrypt.\n"
@@ -97,6 +97,14 @@ to_decode_history = []
 encode_key = []
 
 # Main routine
+make_statement("ENCODING", "#", 5)
+print(
+f"""This is a program that for encoding text. Encoding is conveting plain text into a code, like spies do. 
+That means that you can enter a word or multiple words and a key to encode it with. 
+In the terms of encoding, a key is much like a physical key, you can lock and unlock your text with it.
+Enjoy!\n\n"""
+)
+
 instructions()
 
 while True:
