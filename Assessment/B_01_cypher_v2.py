@@ -1,7 +1,7 @@
 import itertools
 
 # Functions go here
-def make_statement(statement, decoration, amount):
+def make_statement(statement, decoration, amount=3):
     # Emphasise headings by adding decoration to the start and end.
     print(f"{decoration * amount} {statement} {decoration * amount}\n")
 
@@ -30,7 +30,7 @@ def instructions():
 
     if want_instructions == "yes":
         # Print instructions
-        make_statement("Instructions", "#", 3)
+        make_statement("Instructions", "#")
         print(
             "1. Choose whether you want to encode or decode a message.\n"
             "2. If encoding, enter the text you want to encrypt. If decoding, enter the text you want to decrypt.\n"
