@@ -58,7 +58,7 @@ def int_check(question, low, high):
 
 
 def encode(text, shift=3):
-    # Encrypt a users input using a single digit key between 1 and 26.
+    # Encrypt a users input using a single digit key between 1 and 25.
     output = ""
     for c in text:
         if c == " ":
@@ -73,7 +73,7 @@ def encode(text, shift=3):
 
 
 def decode(text, shift=3):
-    # Decrypt a users input using a single digit key between 1 and 26.
+    # Decrypt a users input using a single digit key between 1 and 25.
     output = ""
     for c in text:
         if c == " ":
@@ -117,7 +117,7 @@ while True:
     elif encode_decode == "encode":
         string = input("Enter text to encode: ").lower()
         to_encode_history.append(string)
-        shift = int_check("Please enter an integer between 1 and 26 for shift: ", 1, 26)
+        shift = int_check("Please enter an integer between 1 and 25 for shift: ", 1, 25)
         # Encodes string and prints output
         encoded_history.append(encode(string, shift))
         print(encoded_history[-1])
