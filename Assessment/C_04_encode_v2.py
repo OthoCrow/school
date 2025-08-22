@@ -1,6 +1,6 @@
 # Functions
 def encode(text, shift=3):
-    """Encrypt a users input using a single digit key between 1 and 26."""
+    """Encrypt a users input using an integer key between 1 and 26."""
     output = ""
     for c in text:
         if c == " ":
