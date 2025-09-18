@@ -99,10 +99,10 @@ encode_key = []
 # Main routine
 make_statement("ENCODING", "#", 5)
 print(
-f"""This is a program that for encoding text. Encoding is conveting plain text into a code, like spies do. 
-That means that you can enter a word or multiple words and a key to encode it with. 
-In the terms of encoding, a key is much like a physical key, you can lock and unlock your text with it.
-Enjoy!\n\n"""
+        f"""This is a program that for encoding text. Encoding is conveting plain text into a code, like spies do.
+        That means that you can enter a word or multiple words and a key to encode it with.
+        In the terms of encoding, a key is much like a physical key, you can lock and unlock your text with it.
+        Enjoy!\n\n"""
 )
 
 instructions()
