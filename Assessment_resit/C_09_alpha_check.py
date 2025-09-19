@@ -1,5 +1,5 @@
 def alpha_check(question):
-    response = input("input: ").lower()
+    response = input(question).lower()
     check = response.isalpha()
     if check == True:
         return response
