@@ -57,7 +57,7 @@ def to_state():
     length = len(deci_bytes)
     padding_amount = 16 - length % 16
     padding = bytes([padding_amount]) * padding_amount
-    padded_bytes = deci_bytes + [format(b, '02x') for b in padding]
+    padded_bytes = deci_bytes + list(padding)
     block_dicts = {}
     for block_index in range(0, len(padded_bytes), 16):
         block_num = block_index // 16
@@ -81,7 +81,7 @@ def g(word, round_num):
     word[0] ^= RCON[round_num]
     return word
 
-
+# Expands original 128 bit key into 44 round keys
 def expand_keys(key):
     key = list(input("Enter key: ").encode("utf-8"))
     # Splits key into "words"
@@ -104,7 +104,7 @@ def expand_keys(key):
         keys[f"key{round_num}"] = w0 + w1 + w2 + w3
     return keys
 
-
+# GF(2^8) multiplication
 def gmul(a, b):
     p = 0
     for i in range(8):
