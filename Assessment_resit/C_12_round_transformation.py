@@ -68,29 +68,6 @@ def to_state():
     return block_dicts
 
 
-def sub_bytes(state):
-    new_state = {}
-    for block_name, rows in state.items():
-        new_rows = {}
-        for row_name, row in rows.items():
-            # Replace each byte using SBOX
-            new_row = [SBOX[b] for b in row]
-            new_rows[row_name] = new_row
-        new_state[block_name] = new_rows
-    return new_state
-
-def shift_rows(state):
-    new_state = {}
-    for block_name, rows in state.items():
-        new_rows = {}
-        new_rows["row0"] = rows["row0"][:]
-        new_rows["row1"] = rows["row1"][1:] + rows["row1"][:1]
-        new_rows["row2"] = rows["row2"][2:] + rows["row2"][:2]
-        new_rows["row3"] = rows["row3"][3:] + rows["row3"][:3]
-        new_state[block_name] = new_rows
-    return new_state
-
-
 def gmul(a, b):
     p = 0
     for i in range(8):
@@ -105,21 +82,37 @@ def gmul(a, b):
     return p
 
 
-def mix_columns(state):
+def round_transormation(state):
     new_state = {}
     for block_name, rows in state.items():
         new_rows = {"row0": [], "row1": [], "row2": [], "row3": []}
+
         for c in range(4):
-            s0, s1, s2, s3 = rows["row0"][c], rows["row1"][c], rows["row2"][c], rows["row3"][c]
+            # Sub bytes
+            s0 = SBOX[rows["row0"][c]]
+            s1 = SBOX[rows["row1"][c]]
+            s2 = SBOX[rows["row2"][c]]
+            s3 = SBOX[rows["row3"][c]]
+
+            # Shift rows
+            s0_shifted = s0
+            s1_shifted = SBOX[rows["row1"][(c + 1) % 4]]
+            s2_shifted = SBOX[rows["row2"][(c + 2) % 4]]
+            s3_shifted = SBOX[rows["row3"][(c + 3) % 4]]
+
+            # Mix Columns
             new_col = [
-                gmul(s0, 2) ^ gmul(s1, 3) ^ gmul(s2, 1) ^ gmul(s3, 1),
-                gmul(s0, 1) ^ gmul(s1, 2) ^ gmul(s2, 3) ^ gmul(s3, 1),
-                gmul(s0, 1) ^ gmul(s1, 1) ^ gmul(s2, 2) ^ gmul(s3, 3),
-                gmul(s0, 3) ^ gmul(s1, 1) ^ gmul(s2, 1) ^ gmul(s3, 2),
+                gmul(s0_shifted, 2) ^ gmul(s1_shifted, 3) ^ gmul(s2_shifted, 1) ^ gmul(s3_shifted, 1),
+                gmul(s0_shifted, 1) ^ gmul(s1_shifted, 2) ^ gmul(s2_shifted, 3) ^ gmul(s3_shifted, 1),
+                gmul(s0_shifted, 1) ^ gmul(s1_shifted, 1) ^ gmul(s2_shifted, 2) ^ gmul(s3_shifted, 3),
+                gmul(s0_shifted, 3) ^ gmul(s1_shifted, 1) ^ gmul(s2_shifted, 1) ^ gmul(s3_shifted, 2),
             ]
+
             for r in range(4):
                 new_rows[f"row{r}"].append(new_col[r])
+
         new_state[block_name] = new_rows
+
     return new_state
 
 
