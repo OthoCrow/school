@@ -43,3 +43,30 @@ def g(word, round_num):
     # XOR RCON
     word[0] ^= RCON[round_num]
     return word
+
+def expand_keys(key):
+    key = list(input("Enter key: ").encode("utf-8"))
+    # Splits key into "words"
+    words = [key[i:i +4] for i in range(0, 16, 4)]
+    
+    # Generates new keys
+    for i in range (4, 44):
+        temp = words[i -1]
+        if i % 4 == 0:
+            temp = g(temp, (i // 4) - 1)
+        new_word = [a ^ b for a, b in zip(temp, words[i-4])]
+        words.append(new_word)
+    
+    # Formats keys in dictionary
+    keys = {}
+    for round_num in range(11):
+        start = round_num * 4
+        w0, w1, w2, w3 = words[start:start+4]
+
+        keys[f"key{round_num}"] = w0 + w1 + w2 + w3
+    return keys
+
+
+# Main routine
+
+print(expand_keys(key))
