@@ -56,8 +56,8 @@ def to_state():
     # Adds padding so each block is 16 bytes
     length = len(deci_bytes)
     padding_amount = 16 - length % 16
-    padding = bytes([padding_amount]) * padding_amount
-    padded_bytes = deci_bytes + list(padding)
+    padding = [padding_amount] * padding_amount
+    padded_bytes = deci_bytes + padding
     block_dicts = {}
     for block_index in range(0, len(padded_bytes), 16):
         block_num = block_index // 16
@@ -82,8 +82,9 @@ def g(word, round_num):
     return word
 
 # Expands original 128 bit key into 44 round keys
-def expand_keys(key):
-    key = list(input("Enter key: ").encode("utf-8"))
+def expand_keys():
+    key = list("hhhheeeeuuuudddd".encode("utf-8"))
+    # key = list(input("Enter key: ").encode("utf-8"))
     # Splits key into "words"
     words = [key[i:i +4] for i in range(0, 16, 4)]
     
@@ -119,38 +120,89 @@ def gmul(a, b):
     return p
 
 
-def round_transormation(state):
+def round_transformation(state, mixcolumns):
     new_state = {}
     for block_name, rows in state.items():
-        new_rows = {"row0": [], "row1": [], "row2": [], "row3": []}
 
+        # SubBytes
+        subbed = {}
+        for r, row in rows.items():
+            new_row = []
+            for b in row:
+                new_row.append(SBOX[b])
+            subbed[r] = new_row
+
+        # ShiftRows
+        shifted = {}
+        shifted["row0"] = subbed["row0"]
+        shifted["row1"] = subbed["row1"][1:] + subbed["row1"][:1]
+        shifted["row2"] = subbed["row2"][2:] + subbed["row2"][:2]
+        shifted["row3"] = subbed["row3"][3:] + subbed["row3"][:3]
+
+        # MixColumns
+        mixed = {"row0": [], "row1": [], "row2": [], "row3": []}
         for c in range(4):
-            # Sub bytes
-            s0 = SBOX[rows["row0"][c]]
-            s1 = SBOX[rows["row1"][c]]
-            s2 = SBOX[rows["row2"][c]]
-            s3 = SBOX[rows["row3"][c]]
+            a0 = shifted["row0"][c]
+            a1 = shifted["row1"][c]
+            a2 = shifted["row2"][c]
+            a3 = shifted["row3"][c]
 
-            # Shift rows
-            s0_shifted = s0
-            s1_shifted = SBOX[rows["row1"][(c + 1) % 4]]
-            s2_shifted = SBOX[rows["row2"][(c + 2) % 4]]
-            s3_shifted = SBOX[rows["row3"][(c + 3) % 4]]
+            if mixcolumns == True:
+                col0 = gmul(a0, 2) ^ gmul(a1, 3) ^ gmul(a2, 1) ^ gmul(a3, 1)
+                col1 = gmul(a0, 1) ^ gmul(a1, 2) ^ gmul(a2, 3) ^ gmul(a3, 1)
+                col2 = gmul(a0, 1) ^ gmul(a1, 1) ^ gmul(a2, 2) ^ gmul(a3, 3)
+                col3 = gmul(a0, 3) ^ gmul(a1, 1) ^ gmul(a2, 1) ^ gmul(a3, 2)
+            else:
+                col0 = a0
+                col1 = a1
+                col2 = a2
+                col3 = a3
 
-            # Mix Columns
-            new_col = [
-                gmul(s0_shifted, 2) ^ gmul(s1_shifted, 3) ^ gmul(s2_shifted, 1) ^ gmul(s3_shifted, 1),
-                gmul(s0_shifted, 1) ^ gmul(s1_shifted, 2) ^ gmul(s2_shifted, 3) ^ gmul(s3_shifted, 1),
-                gmul(s0_shifted, 1) ^ gmul(s1_shifted, 1) ^ gmul(s2_shifted, 2) ^ gmul(s3_shifted, 3),
-                gmul(s0_shifted, 3) ^ gmul(s1_shifted, 1) ^ gmul(s2_shifted, 1) ^ gmul(s3_shifted, 2),
-            ]
+            mixed["row0"].append(col0)
+            mixed["row1"].append(col1)
+            mixed["row2"].append(col2)
+            mixed["row3"].append(col3)
 
-            for r in range(4):
-                new_rows[f"row{r}"].append(new_col[r])
-
-        new_state[block_name] = new_rows
+        new_state[block_name] = mixed
 
     return new_state
 
 
+def add_round_key(state, round_key):
+    new_state = {}
+    for block_name, rows in state.items():
+        new_rows = {}
+        for r in range(4):
+            new_row = []
+            for c in range(4):
+                key_index = r * 4 + c
+                new_row.append(rows[f"row{r}"][c] ^ round_key[key_index])
+            new_rows[f"row{r}"] = new_row
+        new_state[block_name] = new_rows
+    return new_state
+
+
 # Main routine
+state_array = to_state()
+keys = expand_keys()
+state_array = add_round_key(state_array, keys['key0'])
+
+for round_num in range(1, 11):
+    if round_num < 10:
+        mixcolumns = True
+    else: 
+        mixcolumns = False
+
+    state_array = round_transformation(state_array, mixcolumns)
+    state_array = add_round_key(state_array, keys[f'key{round_num}'])
+
+output = []
+for block_name in state_array:
+    block = state_array[block_name]
+    for row_index in range(4):
+        row_name = f"row{row_index}"
+        for value in block[row_name]:
+            output.append(value)
+
+ciphertext = bytes(output)
+print(ciphertext.hex())
