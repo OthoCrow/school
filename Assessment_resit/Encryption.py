@@ -38,26 +38,19 @@ RCON = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36]
 
 
 # Functions
-def alpha_check(question):
-    # Checks that input is alphabetical characters
-    response = input(question).lower()
-    check = response.isalpha()
-    if check == True:
-        return response
-    else: 
-        return "Please refrain from entering non-alphabetical characters."
-
-
 def to_state():
     # Converts plaintext to hexidecimal bytes
-    plaintext = alpha_check("Enter plaintext: ")
+    plaintext = validate_input("Enter plaintext: ", 100)
     utf8_bytes = plaintext.encode("utf-8")
     deci_bytes = list(utf8_bytes)
     # Adds padding so each block is 16 bytes
     length = len(deci_bytes)
-    padding_amount = 16 - length % 16
-    padding = [padding_amount] * padding_amount
-    padded_bytes = deci_bytes + padding
+    if length % 16 != 0:
+        padding_amount = 16 - length % 16
+        padding = [padding_amount] * padding_amount
+        padded_bytes = deci_bytes + padding
+    else:
+        padded_bytes = deci_bytes
     block_dicts = {}
     for block_index in range(0, len(padded_bytes), 16):
         block_num = block_index // 16
@@ -84,7 +77,7 @@ def g(word, round_num):
 # Expands original 128 bit key into 44 round keys
 def expand_keys():
     key = list("hhhheeeeuuuudddd".encode("utf-8"))
-    # key = list(input("Enter key: ").encode("utf-8"))
+    # key = list(validate_input("Enter key: ", 16).encode("utf-8"))
     # Splits key into "words"
     words = [key[i:i +4] for i in range(0, 16, 4)]
     
@@ -182,6 +175,17 @@ def add_round_key(state, round_key):
     return new_state
 
 
+def validate_input(prompt, length=None):
+    # Checks that input is ascii characters
+    response = input(prompt).strip().lower()
+    while True:
+        if response.isascii() == False:
+            return "Please enter characters only from the ascii character set: "
+        if length != None and len(response) > length:
+            return f"Please enter {length} characters or less: "
+        return response
+
+
 # Main routine
 state_array = to_state()
 keys = expand_keys()
@@ -205,4 +209,4 @@ for block_name in state_array:
             output.append(value)
 
 ciphertext = bytes(output)
-print(ciphertext.hex())
+print(ciphertext)
