@@ -417,12 +417,13 @@ else:
 state_array = round_transformation(state_array, decrypt, keys)
 
 output = []
-for block_name in state_array:
-    block = state_array[block_name]
-    for row_index in range(4):
-        row_name = f"row{row_index}"
-        for value in block[row_name]:
-            output.append(value)
+for block_name in state_array.values():
+    for c in range(4):
+        output.append(block_name["row0"][c])
+        output.append(block_name["row1"][c])
+        output.append(block_name["row2"][c])
+        output.append(block_name["row3"][c])
+
 
 if decrypt:
     plaintext = bytes(output)
