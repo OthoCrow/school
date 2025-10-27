@@ -128,22 +128,26 @@ def int_check(question, low, high):
 
 
 def to_state():
-    # Converts plaintext to hexidecimal bytes
-    plaintext = validate_input("Enter plaintext: ", None, 100)
-    utf8_bytes = plaintext.encode("utf-8")
-    deci_bytes = list(utf8_bytes)
-    # Adds padding so each block is 16 bytes
-    length = len(deci_bytes)
-    if length % 16 != 0:
+    if decrypt:
+        ciphertext = validate_input("Enter ciphertext: ")
+        # Note: Convert string to hexadecimal bytes
+        to_block = list(bytes.fromhex(ciphertext))
+    else:
+        # Converts plaintext to list of bytes
+        plaintext = validate_input("Enter plaintext: ")
+        utf8_bytes = plaintext.encode("utf-8")
+        list_bytes = list(utf8_bytes)
+        # Adds padding so each block is 16 bytes
+        length = len(list_bytes)
         padding_amount = 16 - length % 16
         padding = [padding_amount] * padding_amount
-        padded_bytes = deci_bytes + padding
-    else:
-        padded_bytes = deci_bytes
-    block_dicts = {}
-    for block_index in range(0, len(padded_bytes), 16):
+        to_block = list_bytes + padding
+
+    # Arranges input into state
+    blocks_dict = {}
+    for block_index in range(0, len(to_block), 16):
         block_num = block_index // 16
-        block = padded_bytes[block_index:block_index+16]
+        block = to_block[block_index:block_index+16]
         rows = {
             "row0": [block[0], block[4], block[8], block[12]],
             "row1": [block[1], block[5], block[9], block[13]],
@@ -151,8 +155,8 @@ def to_state():
             "row3": [block[3], block[7], block[11], block[15]],
         }
 
-        block_dicts[f"block{block_num}"] = rows
-    return block_dicts
+        blocks_dict[f"block{block_num}"] = rows
+    return blocks_dict
 
 
 def g(word, round_num):
@@ -336,7 +340,7 @@ def round_transformation(state, decrypt, keys):
             else:
                 mixcolumns = True 
 
-            for block_name, rows in state.items():                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+            for block_name, rows in state.items():
                 # Inv Shift Rows
                 shifted = inv_shift_rows(rows)
 
@@ -389,7 +393,7 @@ def validate_input(prompt, length=None, max_length=None):
 # Main routine
 make_statement("ENCRYPTION", "#", 5)
 print(
-        f"""This is a program for encrypting text. Encrypting is conveting plain text into ciphertext (or a code), like spies do.
+    f"""        This is a program for encrypting text. Encrypting is conveting plain text into ciphertext (or a code), like spies do.
         That means that you can enter a word or multiple words and a key to encrypt it with.
         In the terms of encryption, a key is much like a physical key, you can lock and unlock your text with it.
         Enjoy!\n\n"""
@@ -420,5 +424,9 @@ for block_name in state_array:
         for value in block[row_name]:
             output.append(value)
 
-ciphertext = bytes(output)
-print(ciphertext.hex())
+if decrypt:
+    plaintext = bytes(output)
+    print(plaintext.decode("utf-8", errors='ignore'))
+else:
+    ciphertext = bytes(output)
+    print(ciphertext.hex())
