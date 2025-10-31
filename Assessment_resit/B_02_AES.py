@@ -79,7 +79,7 @@ def make_statement(statement, decoration, amount=3):
 
 
 def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
-    # Check that user is a word from a list of valid responses.
+    # Check that user input is a word from a list of valid responses.
     while True:
         response = input(question).lower()
 
@@ -97,7 +97,7 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
 
 
 def instructions():
-    # Check if the user wants to see the instructions and print them.
+    # Check if the user wants to see the instructions and prints them accordingly.
     want_instructions = string_checker("Do you want to see the instructions(y/n): ")
 
     if want_instructions == "yes":
@@ -110,31 +110,15 @@ def instructions():
         )
 
 
-def int_check(question, low, high):
-    # Check that user enters an interger between two values.
-    error = f"Invalid input."
-    while True:
-        try:
-            # Change input to a integer and check that is within range
-            response = int(input(question))
-
-            if low <= response <= high:
-                return response
-            else:
-                print(error)
-
-        except ValueError:
-            print(error)
-
-
 def to_state():
+    # Pads the user input and formats it into the 16 byte block
     if decrypt:
-        ciphertext = validate_input("Enter ciphertext: ")
-        # Note: Convert string to hexadecimal bytes
+        # Converts input to a list
+        ciphertext = validate_input("Enter ciphertext: ", None, 2600)
         to_block = list(bytes.fromhex(ciphertext))
     else:
         # Converts plaintext to list of bytes
-        plaintext = validate_input("Enter plaintext: ")
+        plaintext = validate_input("Enter plaintext: ", None, 1300)
         utf8_bytes = plaintext.encode("utf-8")
         list_bytes = list(utf8_bytes)
         # Adds padding so each block is 16 bytes
@@ -160,6 +144,7 @@ def to_state():
 
 
 def g(word, round_num):
+    # Used in key expansion
     # Shift byte
     word = word[1:] + word[:1]
     # Sub byte
@@ -209,6 +194,7 @@ def gmul(a, b):
 
 
 def sub_bytes(rows):
+    # Subsitutes bytes using the SBOX
     subbed = {}
     for r, row in rows.items():
         new_row = []
@@ -219,6 +205,7 @@ def sub_bytes(rows):
 
 
 def shift_rows(subbed):
+    # Shifts rows to the right
     shifted = {}
     shifted["row0"] = subbed["row0"]
     shifted["row1"] = subbed["row1"][1:] + subbed["row1"][:1]
@@ -228,6 +215,7 @@ def shift_rows(subbed):
 
 
 def mix_columns(shifted, mixcolumns=True):
+    # Mixes columns using method akin to matrice multiplication
     mixed = {"row0": [], "row1": [], "row2": [], "row3": []}
     for c in range(4):
         a0 = shifted["row0"][c]
@@ -235,6 +223,7 @@ def mix_columns(shifted, mixcolumns=True):
         a2 = shifted["row2"][c]
         a3 = shifted["row3"][c]
 
+        # Skips on last round
         if mixcolumns == True:
             col0 = gmul(a0, 2) ^ gmul(a1, 3) ^ gmul(a2, 1) ^ gmul(a3, 1)
             col1 = gmul(a0, 1) ^ gmul(a1, 2) ^ gmul(a2, 3) ^ gmul(a3, 1)
@@ -255,6 +244,7 @@ def mix_columns(shifted, mixcolumns=True):
 
 
 def inv_shift_rows(rows):
+    # Reverse of shift rows
     shifted = {}
     shifted["row0"] = rows["row0"]
     shifted["row1"] = rows["row1"][-1:] + rows["row1"][:-1]
@@ -264,6 +254,7 @@ def inv_shift_rows(rows):
 
 
 def inv_sub_bytes(shifted):
+    # Substitutes bytes using the inverse SBOX
     subbed = {}
     for r, row in shifted.items():
         new_row = []
@@ -274,6 +265,7 @@ def inv_sub_bytes(shifted):
 
 
 def inv_mix_columns(subbed, mixcolumns=True):
+    # Does the inverse of mix_columns by multplying with a diffferent set matrix
     mixed = {"row0": [], "row1": [], "row2": [], "row3": []}
     for c in range(4):
         a0 = subbed["row0"][c]
@@ -281,6 +273,7 @@ def inv_mix_columns(subbed, mixcolumns=True):
         a2 = subbed["row2"][c]
         a3 = subbed["row3"][c]
 
+        # Skips on last round
         if mixcolumns == True:
             col0 = gmul(a0, 14) ^ gmul(a1, 11) ^ gmul(a2, 13) ^ gmul(a3, 9)
             col1 = gmul(a0, 9) ^ gmul(a1, 14) ^ gmul(a2, 11) ^ gmul(a3, 13)
@@ -301,6 +294,9 @@ def inv_mix_columns(subbed, mixcolumns=True):
 
 
 def encryption(state, keys):
+    # Perform operations to encrypt data
+    # Add initial round key
+    state = add_round_key(state, keys['key0'])
     for round_num in range(1, 11):
         temp_state = {}
         # Do mix_columns?
@@ -308,6 +304,7 @@ def encryption(state, keys):
             mixcolumns = False
         else:
             mixcolumns = True
+
         for block_name, rows in state.items():
 
             # Sub bytes
@@ -330,6 +327,10 @@ def encryption(state, keys):
 
 
 def decryption(state, keys):
+    # Perform operations to decrypt data
+    # Add initial round key
+    state = add_round_key(state, keys['key10'])
+
     for round_num in range(10, 0, -1):
         temp_state = {}
         # Do inv_mix_columns?
@@ -361,17 +362,16 @@ def decryption(state, keys):
 def round_transformation(state, decrypt, keys):
     # Encryption
     if decrypt == False:
-        state = add_round_key(state, keys['key0'])
         new_state = encryption(state, keys)
     # Decryption
     else:
-        state = add_round_key(state, keys['key10'])
         new_state = decryption(state, keys)
 
     return new_state
 
 
 def add_round_key(state, round_key):
+    # Adds the round key
     new_state = {}
     for block_name, rows in state.items():
         new_rows = {}
@@ -386,17 +386,19 @@ def add_round_key(state, round_key):
 
 
 def validate_input(prompt, length=None, max_length=None):
-    # Checks that input is ascii characters
+    # Checks that input is ascii characters (optionally specific lengths)
     while True:
         response = input(prompt).strip()
         if response.isascii() == False:
-            print("Please enter characters only from the ascii character set: ")
+            print("Input must only contain characters from the ascii character set")
             continue
+        # Is equal to defined length
         if length != None and len(response) != length:
-            print(f"Please enter {length} characters: ")
+            print(f"Input must be {length} characters long")
             continue
+        # Is less than max length
         if max_length != None and len(response) > max_length:
-            print(f"Please enter {max_length} characters or less: ")
+            print(f"Input must be {max_length} characters or less")
             continue
         return response
 
@@ -404,10 +406,10 @@ def validate_input(prompt, length=None, max_length=None):
 # Main routine
 make_statement("ENCRYPTION", "#", 5)
 print(
-    f"""        This is a program for encrypting text. Encrypting is conveting plain text into ciphertext (or a code), like spies do.
-        That means that you can enter a word or multiple words and a key to encrypt it with.
-        In the terms of encryption, a key is much like a physical key, you can lock and unlock your text with it.
-        Enjoy!\n\n"""
+    f"""    This is a program for encrypting and decrypting text. Encrypting is conveting plain text into ciphertext (or a code), like spies do.
+    That means that you can enter a word or multiple words and a key to encrypt it with.
+    In the terms of encryption, a key is much like a physical key, you can lock and unlock your text with it.
+    Enjoy!\n\n"""
 )
 
 instructions()
