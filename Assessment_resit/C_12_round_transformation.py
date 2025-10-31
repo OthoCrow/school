@@ -34,19 +34,27 @@ SBOX = [
 ]
 
 
-def alpha_check(question):
-    # Checks that input is alphabetical characters
-    response = input(question).lower()
-    check = response.isalpha()
-    if check == True:
+def validate_input(prompt, length=None, max_length=None):
+    # Checks that input is ascii characters (optionally specific lengths)
+    while True:
+        response = input(prompt).strip()
+        if response.isascii() == False:
+            print("Please enter characters only from the ascii character set: ")
+            continue
+        # Is equal to defined length
+        if length != None and len(response) != length:
+            print(f"Please enter {length} characters: ")
+            continue
+        # Is less than max length
+        if max_length != None and len(response) > max_length:
+            print(f"Please enter {max_length} characters or less: ")
+            continue
         return response
-    else: 
-        return "Please refrain from entering non-alphabetical characters."
 
 
 def to_state():
     # Converts plaintext to hexidecimal bytes
-    plaintext = alpha_check("Enter plaintext: ")
+    plaintext = validate_input("Enter plaintext: ")
     utf8_bytes = plaintext.encode("utf-8")
     deci_bytes = list(utf8_bytes)
     # Adds padding so each block is 16 bytes
@@ -117,6 +125,6 @@ def round_transormation(state):
 
 
 # Main Routine
-state = sub_bytes(to_state())
+state = round_transormation(to_state())
 
 print(state)

@@ -44,8 +44,26 @@ def g(word, round_num):
     word[0] ^= RCON[round_num]
     return word
 
-def expand_keys(key):
-    key = list(input("Enter key: ").encode("utf-8"))
+def validate_input(prompt, length=None, max_length=None):
+    # Checks that input is ascii characters (optionally specific lengths)
+    while True:
+        response = input(prompt).strip()
+        if response.isascii() == False:
+            print("Please enter characters only from the ascii character set: ")
+            continue
+        # Is equal to defined length
+        if length != None and len(response) != length:
+            print(f"Please enter {length} characters: ")
+            continue
+        # Is less than max length
+        if max_length != None and len(response) > max_length:
+            print(f"Please enter {max_length} characters or less: ")
+            continue
+        return response
+
+def expand_keys():
+    # Expands original 128 bit key into 44 round keys
+    key = list(validate_input("Enter 16 character key: ", 16).encode("utf-8"))
     # Splits key into "words"
     words = [key[i:i +4] for i in range(0, 16, 4)]
     
@@ -69,4 +87,4 @@ def expand_keys(key):
 
 # Main routine
 
-print(expand_keys(key))
+print(expand_keys())
