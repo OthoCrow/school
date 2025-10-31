@@ -127,7 +127,7 @@ def int_check(question, low, high):
             print(error)
 
 
-def to_state(decrypt):
+def to_state():
     if decrypt:
         ciphertext = validate_input("Enter ciphertext: ")
         # Note: Convert string to hexadecimal bytes
@@ -208,7 +208,7 @@ def gmul(a, b):
     return p
 
 
-def sub_bytes(block_name, rows):
+def sub_bytes(rows):
     subbed = {}
     for r, row in rows.items():
         new_row = []
@@ -227,7 +227,7 @@ def shift_rows(subbed):
     return shifted
 
 
-def mix_columns(shifted, block_name, mixcolumns=True):
+def mix_columns(shifted, mixcolumns=True):
     mixed = {"row0": [], "row1": [], "row2": [], "row3": []}
     for c in range(4):
         a0 = shifted["row0"][c]
@@ -273,7 +273,7 @@ def inv_sub_bytes(shifted):
     return subbed
 
 
-def inv_mix_columns(subbed, block_name, mixcolumns=True):
+def inv_mix_columns(subbed, mixcolumns=True):
     mixed = {"row0": [], "row1": [], "row2": [], "row3": []}
     for c in range(4):
         a0 = subbed["row0"][c]
@@ -311,13 +311,13 @@ def encryption(state, keys):
         for block_name, rows in state.items():
 
             # Sub bytes
-            subbed = sub_bytes(block_name, rows)
+            subbed = sub_bytes(rows)
 
             # Shift Rows
             shifted = shift_rows(subbed)
 
             # Mix Columns
-            mixed = mix_columns(shifted, block_name, mixcolumns)
+            mixed = mix_columns(shifted, mixcolumns)
 
             # Add Round Key
             keyed = add_round_key({block_name: mixed}, keys[f'key{round_num}'])
@@ -349,21 +349,23 @@ def decryption(state, keys):
             keyed = add_round_key({block_name: subbed}, keys[f'key{round_num -1}'])
 
             # Inv Mix Columns
-            mixed = inv_mix_columns(keyed[block_name], block_name, mixcolumns)
+            mixed = inv_mix_columns(keyed[block_name], mixcolumns)
 
             temp_state[block_name] = mixed
+        # Use for next round
         state = temp_state
+    # Use for output
     return state
 
 
 def round_transformation(state, decrypt, keys):
     # Encryption
     if decrypt == False:
-        state_array = add_round_key(state, keys['key0'])
+        state = add_round_key(state, keys['key0'])
         new_state = encryption(state, keys)
     # Decryption
     else:
-        state_array = add_round_key(state, keys['key10'])
+        state = add_round_key(state, keys['key10'])
         new_state = decryption(state, keys)
 
     return new_state
@@ -416,7 +418,7 @@ else:
     decrypt = False
 
 keys = expand_keys()
-state_array = to_state(decrypt)
+state_array = to_state()
 
 state_array = round_transformation(state_array, decrypt, keys)
 
