@@ -97,18 +97,21 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
 
 
 def instructions():
-    # Check if the user wants to see the instructions and prints them accordingly.
-    want_instructions = string_checker("\nDo you want to see the instructions(y/n): ")
+    # Checks if user wants instructons
+    want_instructions = string_checker("\nDo you want printed instructions?: ")
 
     if want_instructions == "yes":
         # Print instructions
-        print()
         make_statement("Instructions", "#")
-        print(
-            "This is a program for encrypting text using the Advanced Encryption standard.\n"
-            "You will be prompted to enter a 16 character key that will be used to encrypt your text.\n"
-            "You will be prompted for the plain text you want to encrypt, which will be printed once encrypted."
-        )
+        print("""
+            This program encrypts and decrypts using the Advanced Encryption
+            Standard. Enter a 16 character key that will be used to encrypt
+            your text, make sure that this is securely generated. You will
+            be prompted for the plain text you want to encrypt, or ciphertext
+            you want to decrpt(ensure that ciphertext is in same format as
+            output from encryption). The program will print the output after
+            it has run its operations.
+            """)
 
 
 def to_state():
@@ -160,16 +163,16 @@ def expand_keys():
     # Expands original 128 bit key into 44 round keys
     key = list(validate_input("Enter 16 character key: ", 16).encode("utf-8"))
     # Splits key into "words"
-    words = [key[i:i +4] for i in range(0, 16, 4)]
-    
+    words = [key[i:i + 4] for i in range(0, 16, 4)]
+
     # Generates new keys
-    for i in range (4, 44):
-        temp = words[i -1]
+    for i in range(4, 44):
+        temp = words[i - 1]
         if i % 4 == 0:
             temp = g(temp, (i // 4) - 1)
         new_word = [a ^ b for a, b in zip(temp, words[i-4])]
         words.append(new_word)
-    
+
     # Formats keys in dictionary
     keys = {}
     for round_num in range(11):
@@ -226,7 +229,7 @@ def mix_columns(shifted, mixcolumns=True):
         a3 = shifted["row3"][c]
 
         # Skips on last round
-        if mixcolumns == True:
+        if mixcolumns is True:
             col0 = gmul(a0, 2) ^ gmul(a1, 3) ^ gmul(a2, 1) ^ gmul(a3, 1)
             col1 = gmul(a0, 1) ^ gmul(a1, 2) ^ gmul(a2, 3) ^ gmul(a3, 1)
             col2 = gmul(a0, 1) ^ gmul(a1, 1) ^ gmul(a2, 2) ^ gmul(a3, 3)
@@ -267,7 +270,7 @@ def inv_sub_bytes(shifted):
 
 
 def inv_mix_columns(subbed, mixcolumns=True):
-    # Does the inverse of mix_columns by multplying with a diffferent set matrix
+    # Does the inverse of mix_columns by multplying with the inverse set matrix
     mixed = {"row0": [], "row1": [], "row2": [], "row3": []}
     for c in range(4):
         a0 = subbed["row0"][c]
@@ -276,7 +279,7 @@ def inv_mix_columns(subbed, mixcolumns=True):
         a3 = subbed["row3"][c]
 
         # Skips on last round
-        if mixcolumns == True:
+        if mixcolumns is True:
             col0 = gmul(a0, 14) ^ gmul(a1, 11) ^ gmul(a2, 13) ^ gmul(a3, 9)
             col1 = gmul(a0, 9) ^ gmul(a1, 14) ^ gmul(a2, 11) ^ gmul(a3, 13)
             col2 = gmul(a0, 13) ^ gmul(a1, 9) ^ gmul(a2, 14) ^ gmul(a3, 11)
@@ -291,7 +294,7 @@ def inv_mix_columns(subbed, mixcolumns=True):
         mixed["row1"].append(col1)
         mixed["row2"].append(col2)
         mixed["row3"].append(col3)
-        
+
     return mixed
 
 
@@ -339,7 +342,7 @@ def decryption(state, keys):
         if round_num == 1:
             mixcolumns = False
         else:
-            mixcolumns = True 
+            mixcolumns = True
 
         for block_name, rows in state.items():
             # Inv Shift Rows
@@ -349,7 +352,7 @@ def decryption(state, keys):
             subbed = inv_sub_bytes(shifted)
 
             # Add Round Key
-            keyed = add_round_key({block_name: subbed}, keys[f'key{round_num -1}'])
+            keyed = add_round_key({block_name: subbed}, keys[f'key{round_num - 1}'])
 
             # Inv Mix Columns
             mixed = inv_mix_columns(keyed[block_name], mixcolumns)
@@ -363,7 +366,7 @@ def decryption(state, keys):
 
 def round_transformation(state, decrypt, keys):
     # Encryption
-    if decrypt == False:
+    if decrypt is False:
         new_state = encryption(state, keys)
     # Decryption
     else:
@@ -391,18 +394,18 @@ def validate_input(prompt, length=None, max_length=None, min_length=None):
     # Checks that input is ascii characters (optionally specific lengths, max_length, min length)
     while True:
         response = input(prompt).strip()
-        if response.isascii() == False:
-            print("Input must only contain characters from the ascii character set\n")
+        if response.isascii() is False:
+            print("Input must only contain ascii characters\n")
             continue
         # Is equal to defined length
-        elif length != None and len(response) != length:
+        elif length is not None and len(response) != length:
             print(f"Input must be {length} characters long\n")
             continue
         # Is less than max length
-        elif max_length != None and len(response) > max_length:
+        elif max_length is not None and len(response) > max_length:
             print(f"Input must be {max_length} characters or less\n")
             continue
-        elif min_length != None and len(response) < min_length:
+        elif min_length is not None and len(response) < min_length:
             print(f"Input must {min_length} characters or more\n")
             continue
         return response
@@ -440,13 +443,13 @@ while True:
 
     if decrypt:
         plaintext = bytes(output)
-        print(plaintext.decode("utf-8"))
+        print(plaintext.decode("utf-8").strip())
     else:
         ciphertext = bytes(output)
         print(ciphertext.hex())
 
-    next_round = string_checker("Go again?: ")
+    next_round = string_checker("\nGo again?: ")
     if next_round == "yes":
         continue
-    else: 
+    else:
         break
