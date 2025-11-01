@@ -93,20 +93,21 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
             elif response == item[:num_letters]:
                 return item
 
-        print(f"Please choose from {valid_answers}")
+        print(f"Please choose from {valid_answers}\n")
 
 
 def instructions():
     # Check if the user wants to see the instructions and prints them accordingly.
-    want_instructions = string_checker("Do you want to see the instructions(y/n): ")
+    want_instructions = string_checker("\nDo you want to see the instructions(y/n): ")
 
     if want_instructions == "yes":
         # Print instructions
+        print()
         make_statement("Instructions", "#")
         print(
             "This is a program for encrypting text using the Advanced Encryption standard.\n"
             "You will be prompted to enter a 16 character key that will be used to encrypt your text.\n"
-            "You will be prompted for the plain text you want to encrypt, which will be printed once encrypted.\n"
+            "You will be prompted for the plain text you want to encrypt, which will be printed once encrypted."
         )
 
 
@@ -114,8 +115,9 @@ def to_state():
     # Pads the user input and formats it into the 16 byte block
     if decrypt:
         # Converts input to a list
-        ciphertext = validate_input("Enter ciphertext: ", None, 2600)
+        ciphertext = validate_input("Enter ciphertext: ", None, 2600, 32)
         to_block = list(bytes.fromhex(ciphertext))
+
     else:
         # Converts plaintext to list of bytes
         plaintext = validate_input("Enter plaintext: ", None, 1300)
@@ -385,20 +387,23 @@ def add_round_key(state, round_key):
     return new_state
 
 
-def validate_input(prompt, length=None, max_length=None):
-    # Checks that input is ascii characters (optionally specific lengths)
+def validate_input(prompt, length=None, max_length=None, min_length=None):
+    # Checks that input is ascii characters (optionally specific lengths, max_length, min length)
     while True:
         response = input(prompt).strip()
         if response.isascii() == False:
-            print("Input must only contain characters from the ascii character set")
+            print("Input must only contain characters from the ascii character set\n")
             continue
         # Is equal to defined length
-        if length != None and len(response) != length:
-            print(f"Input must be {length} characters long")
+        elif length != None and len(response) != length:
+            print(f"Input must be {length} characters long\n")
             continue
         # Is less than max length
-        if max_length != None and len(response) > max_length:
-            print(f"Input must be {max_length} characters or less")
+        elif max_length != None and len(response) > max_length:
+            print(f"Input must be {max_length} characters or less\n")
+            continue
+        elif min_length != None and len(response) < min_length:
+            print(f"Input must {min_length} characters or more\n")
             continue
         return response
 
@@ -409,32 +414,39 @@ print(
     f"""    This is a program for encrypting and decrypting text. Encrypting is conveting plain text into ciphertext (or a code), like spies do.
     That means that you can enter a word or multiple words and a key to encrypt it with.
     In the terms of encryption, a key is much like a physical key, you can lock and unlock your text with it.
-    Enjoy!\n\n"""
+    Enjoy!\n"""
 )
 
 instructions()
-decrypt = string_checker("Would you like to encrypt or decrypt?: ", valid_answers=("encrypt", "decrypt"))
-if decrypt == "decrypt":
-    decrypt = True
-else:
-    decrypt = False
+while True:
+    decrypt = string_checker("\nWould you like to encrypt or decrypt?: ", valid_answers=("encrypt", "decrypt"))
+    if decrypt == "decrypt":
+        decrypt = True
+    else:
+        decrypt = False
 
-keys = expand_keys()
-state_array = to_state()
+    keys = expand_keys()
+    state_array = to_state()
 
-state_array = round_transformation(state_array, decrypt, keys)
+    state_array = round_transformation(state_array, decrypt, keys)
 
-output = []
-for block_name in state_array.values():
-    for c in range(4):
-        output.append(block_name["row0"][c])
-        output.append(block_name["row1"][c])
-        output.append(block_name["row2"][c])
-        output.append(block_name["row3"][c])
+    output = []
+    for block_name in state_array.values():
+        for c in range(4):
+            output.append(block_name["row0"][c])
+            output.append(block_name["row1"][c])
+            output.append(block_name["row2"][c])
+            output.append(block_name["row3"][c])
 
-if decrypt:
-    plaintext = bytes(output)
-    print(plaintext.decode("utf-8", errors='ignore'))
-else:
-    ciphertext = bytes(output)
-    print(ciphertext.hex())
+    if decrypt:
+        plaintext = bytes(output)
+        print(plaintext.decode("utf-8"))
+    else:
+        ciphertext = bytes(output)
+        print(ciphertext.hex())
+
+    next_round = string_checker("Go again?: ")
+    if next_round == "yes":
+        continue
+    else: 
+        break
