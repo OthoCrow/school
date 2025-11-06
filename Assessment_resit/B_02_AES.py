@@ -97,7 +97,7 @@ def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
 
 
 def instructions():
-    # Checks if user wants instructons
+    # Checks if user wants instructions
     want_instructions = string_checker("\nDo you want printed instructions?: ")
 
     if want_instructions == "yes":
@@ -118,12 +118,15 @@ def to_state():
     # Pads the user input and formats it into the 16 byte block
     if decrypt:
         # Converts input to a list
-        ciphertext = validate_input("Enter ciphertext: ", None, 2600, 32)
-        to_block = list(bytes.fromhex(ciphertext))
+        try:
+            ciphertext = validate_input("Enter ciphertext: ", None, 2600, 32)
+            to_block = list(bytes.fromhex(ciphertext))
+        except Exception as err:
+            print("An error has occured: {err}")
 
     else:
         # Converts plaintext to list of bytes
-        plaintext = validate_input("Enter plaintext: ", None, 1300)
+        plaintext = validate_input("Enter plaintext: ", None, 1300, 1)
         utf8_bytes = plaintext.encode("utf-8")
         list_bytes = list(utf8_bytes)
         # Adds padding so each block is 16 bytes
@@ -199,7 +202,7 @@ def gmul(a, b):
 
 
 def sub_bytes(rows):
-    # Subsitutes bytes using the SBOX
+    # Substitutes bytes using the SBOX
     subbed = {}
     for r, row in rows.items():
         new_row = []
@@ -270,7 +273,7 @@ def inv_sub_bytes(shifted):
 
 
 def inv_mix_columns(subbed, mixcolumns=True):
-    # Does the inverse of mix_columns by multplying with the inverse set matrix
+    # Does the inverse of mix_columns by multiplying with the inverse set matrix
     mixed = {"row0": [], "row1": [], "row2": [], "row3": []}
     for c in range(4):
         a0 = subbed["row0"][c]
@@ -414,7 +417,7 @@ def validate_input(prompt, length=None, max_length=None, min_length=None):
 # Main routine
 make_statement("ENCRYPTION", "#", 5)
 print(
-    f"""    This is a program for encrypting and decrypting text. Encrypting is conveting plain text into ciphertext (or a code), like spies do.
+    f"""    This is a program for encrypting and decrypting text. Encrypting is converting plain text into ciphertext (or a code), like spies do.
     That means that you can enter a word or multiple words and a key to encrypt it with.
     In the terms of encryption, a key is much like a physical key, you can lock and unlock your text with it.
     Enjoy!\n"""
