@@ -118,15 +118,21 @@ def to_state():
     # Pads the user input and formats it into the 16 byte block
     if decrypt:
         # Converts input to a list
-        try:
-            ciphertext = validate_input("Enter ciphertext: ", None, 2600, 32)
-            to_block = list(bytes.fromhex(ciphertext))
-        except Exception as err:
-            print("An error has occured: {err}")
+        while True:
+            try:
+                ciphertext = validate_input(
+                    "Enter ciphertext: ", None, 2656, 32)
+                to_block = list(bytes.fromhex(ciphertext))
+            except ValueError:
+                print("Invalid hex input. Please try again\n")
+            except Exception as err:
+                print(f"An unexpected error occurred: {err}")
+            else:
+                break
 
     else:
         # Converts plaintext to list of bytes
-        plaintext = validate_input("Enter plaintext: ", None, 1300, 1)
+        plaintext = validate_input("Enter plaintext: ", None, 1312, 1)
         utf8_bytes = plaintext.encode("utf-8")
         list_bytes = list(utf8_bytes)
         # Adds padding so each block is 16 bytes
@@ -273,7 +279,8 @@ def inv_sub_bytes(shifted):
 
 
 def inv_mix_columns(subbed, mixcolumns=True):
-    # Does the inverse of mix_columns by multiplying with the inverse set matrix
+    # Does the inverse of mix_columns by multiplying with the
+    # inverse set matrix
     mixed = {"row0": [], "row1": [], "row2": [], "row3": []}
     for c in range(4):
         a0 = subbed["row0"][c]
@@ -355,7 +362,8 @@ def decryption(state, keys):
             subbed = inv_sub_bytes(shifted)
 
             # Add Round Key
-            keyed = add_round_key({block_name: subbed}, keys[f'key{round_num - 1}'])
+            keyed = add_round_key({block_name: subbed},
+                                  keys[f'key{round_num - 1}'])
 
             # Inv Mix Columns
             mixed = inv_mix_columns(keyed[block_name], mixcolumns)
@@ -394,7 +402,8 @@ def add_round_key(state, round_key):
 
 
 def validate_input(prompt, length=None, max_length=None, min_length=None):
-    # Checks that input is ascii characters (optionally specific lengths, max_length, min length)
+    # Checks that input is ascii characters (optionally specific lengths,
+    # max_length, min length)
     while True:
         response = input(prompt).strip()
         if response.isascii() is False:
@@ -416,16 +425,19 @@ def validate_input(prompt, length=None, max_length=None, min_length=None):
 
 # Main routine
 make_statement("ENCRYPTION", "#", 5)
-print(
-    f"""    This is a program for encrypting and decrypting text. Encrypting is converting plain text into ciphertext (or a code), like spies do.
-    That means that you can enter a word or multiple words and a key to encrypt it with.
-    In the terms of encryption, a key is much like a physical key, you can lock and unlock your text with it.
-    Enjoy!\n"""
-)
+print(f"""
+    This is a program for encrypting and decrypting text. Encrypting is
+    converting plain text into ciphertext (or a code), like spies do.
+    That means that you can enter a word or multiple words and a key to
+    encrypt it with.
+    In the terms of encryption, a key is much like a physical key, you
+    can lock and unlock your text with it.
+    Enjoy!\n""")
 
 instructions()
 while True:
-    decrypt = string_checker("\nWould you like to encrypt or decrypt?: ", valid_answers=("encrypt", "decrypt"))
+    decrypt = string_checker(
+        "\nWould you like to encrypt or decrypt?: ", ("encrypt", "decrypt"))
     if decrypt == "decrypt":
         decrypt = True
     else:
@@ -446,10 +458,10 @@ while True:
 
     if decrypt:
         plaintext = bytes(output)
-        print(plaintext.decode("utf-8").strip())
+        print("\n" + plaintext.decode("utf-8").strip())
     else:
         ciphertext = bytes(output)
-        print(ciphertext.hex())
+        print("\n" + ciphertext.hex())
 
     next_round = string_checker("\nGo again?: ")
     if next_round == "yes":
