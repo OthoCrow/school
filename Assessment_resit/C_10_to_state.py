@@ -16,15 +16,42 @@ def validate_input(prompt, length=None, max_length=None):
         return response
 
 
-def to_state(decrypt):
+def string_checker(question, valid_answers=("yes", "no"), num_letters=1):
+    # Checks that user enters full word or the first letter of a word from a selcetin of valid responses
+    while True:
+        response = input(question).lower()
+
+        for item in valid_answers:
+
+            # Check if the response is the intire word
+            if response == item:
+                return item
+
+            # Check if it is the 'n' letters
+            elif response == item[:num_letters]:
+                return item
+
+        print(f"Please choose from {valid_answers}")
+
+
+def to_state():
     # Pads the user input and formats it into the 16 byte block
     if decrypt:
         # Converts input to a list
-        ciphertext = input("Enter ciphertext: ")
-        to_block = list(bytes.fromhex(ciphertext))
+        while True:
+            try:
+                ciphertext = validate_input("Enter ciphertext: ", None, 2656, 32)
+                to_block = list(bytes.fromhex(ciphertext))
+            except ValueError:
+                print("Invalid hex input. Please try again")
+            except Exception as err:
+                print(f"An unexpected error occurred: {err}")
+            else:
+                break
+
     else:
         # Converts plaintext to list of bytes
-        plaintext = validate_input("Enter plaintext: ")
+        plaintext = validate_input("Enter plaintext: ", None, 1312, 1)
         utf8_bytes = plaintext.encode("utf-8")
         list_bytes = list(utf8_bytes)
         # Adds padding so each block is 16 bytes
@@ -51,10 +78,10 @@ def to_state(decrypt):
 
 # Main routine
 while True:
-    decrypt = validate_input("Encrypt or decrypt: ")
+    decrypt = string_checker("Encrypt or decrypt: ", ("encrypt", "decrypt"))
     if decrypt == "decrypt":
         decrypt = True
     else:
         decrypt = False
 
-    print(to_state(decrypt))
+    print(to_state())
