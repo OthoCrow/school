@@ -444,31 +444,30 @@ while True:
         decrypt = False
 
     keys = expand_keys()
-    while True:
-        try:
-            state_array = to_state()
+    try:
+        state_array = to_state()
 
-            state_array = round_transformation(state_array, decrypt, keys)
+        state_array = round_transformation(state_array, decrypt, keys)
 
-            output = []
-            for block_name in state_array.values():
-                for c in range(4):
-                    output.append(block_name["row0"][c])
-                    output.append(block_name["row1"][c])
-                    output.append(block_name["row2"][c])
-                    output.append(block_name["row3"][c])
+        output = []
+        for block_name in state_array.values():
+            for c in range(4):
+                output.append(block_name["row0"][c])
+                output.append(block_name["row1"][c])
+                output.append(block_name["row2"][c])
+                output.append(block_name["row3"][c])
 
-            if decrypt:
-                plaintext = bytes(output)
-                print("\n" + plaintext.decode("utf-8").strip())
-            else:
-                ciphertext = bytes(output)
-                print("\n" + ciphertext.hex())
+        if decrypt:
+            plaintext = bytes(output)
+            print("\n" + plaintext.decode("utf-8").strip())
+        else:
+            ciphertext = bytes(output)
+            print("\n" + ciphertext.hex())
 
-            next_round = string_checker("\nGo again?: ")
-            if next_round == "yes":
-                continue
-            else:
-                break
-        except Exception as err:
-            print(f"An error has occured: {err} \nPlease try again")
+        next_round = string_checker("\nGo again?: ")
+        if next_round == "yes":
+            continue
+        else:
+            break
+    except Exception as err:
+        print(f"An error has occured: {err} \nPlease try again")
